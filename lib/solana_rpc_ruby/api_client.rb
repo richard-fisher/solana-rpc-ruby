@@ -4,8 +4,8 @@ module SolanaRpcRuby
   # ApiClient class serves as a client for solana JSON RPC API.
   # @see https://docs.solana.com/developing/clients/jsonrpc-api
   class ApiClient
-    OPEN_TIMEOUT = 120
-    READ_TIMEOUT = 120
+    OPEN_TIMEOUT = 300
+    READ_TIMEOUT = 300
 
     # Determines which cluster will be used to send requests.
     # @return [String]
