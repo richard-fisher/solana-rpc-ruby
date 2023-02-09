@@ -1118,6 +1118,7 @@ module SolanaRpcRuby
 
       params_hash['commitment'] = commitment unless blank?(commitment)
       params_hash['encoding'] = encoding unless blank?(encoding)
+      params_hash['maxSupportedTransactionVersion'] = 0
 
       params << transaction_signature
       params << params_hash unless params_hash.empty?
