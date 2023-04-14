@@ -37,7 +37,7 @@ module SolanaRpcRuby
       bearer_token: SolanaRpcRuby.bearer_token
     )
 
-      @api_client = api_client.new(cluster)
+      @api_client = api_client.new(cluster, bearer_token)
       @cluster = cluster
       @id = id
       @bearer_token = bearer_token

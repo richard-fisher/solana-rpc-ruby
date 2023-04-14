@@ -22,8 +22,9 @@ module SolanaRpcRuby
     # Initialize object with cluster address where requests will be sent.
     #
     # @param cluster [String]
-    def initialize(cluster = nil)
+    def initialize(cluster = nil, bearer_token = nil)
       @cluster = cluster || SolanaRpcRuby.cluster
+      @bearer_token = bearer_token || SolanaRpcRuby.bearer_token
 
       message = 'Cluster is missing. Please provide default cluster in config or pass it to the client directly.'
       raise ArgumentError, message unless @cluster
@@ -70,7 +71,7 @@ module SolanaRpcRuby
 
     def default_headers
       headers = { 'Content-Type' => 'application/json' }
-      headers['Authorization'] = "Bearer #{SolanaRpcRuby.bearer_token}" if SolanaRpcRuby.bearer_token
+      headers['Authorization'] = "Bearer #{@bearer_token}" if @bearer_token
       headers
     end
   end
