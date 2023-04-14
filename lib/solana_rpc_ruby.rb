@@ -20,6 +20,10 @@ module SolanaRpcRuby
     # @return [String] json rpc version.
     attr_accessor :json_rpc_version
 
+    # Bearer token to be used for rpc auth (optional)
+    # @return [String] bearer token.
+    attr_accessor :bearer_token
+
     # Config set from initializer.
     # @return [String] encoding.
     def config

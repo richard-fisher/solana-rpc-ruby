@@ -11,6 +11,10 @@ module SolanaRpcRuby
     # @return [String]
     attr_accessor :cluster
 
+    # Use bearer token if present in config
+    # @return [String]
+    attr_accessor :bearer_token
+
     # Default headers.
     # @return [Hash]
     attr_accessor :default_headers
@@ -39,15 +43,14 @@ module SolanaRpcRuby
       request.body = body
 
       Net::HTTP.start(
-        uri.host, 
-        uri.port, 
-        use_ssl: true, 
+        uri.host,
+        uri.port,
+        use_ssl: true,
         open_timeout: OPEN_TIMEOUT,
         read_timeout: READ_TIMEOUT
       ) do |http|
         http.request(request)
       end
-
     rescue Timeout::Error,
            Net::HTTPError,
            Net::HTTPNotFound,
@@ -57,16 +60,18 @@ module SolanaRpcRuby
            Errno::ECONNREFUSED,
            SocketError => e
 
-      fail ApiError.new(error_class: e.class, message: e.message)
+      raise ApiError.new(error_class: e.class, message: e.message)
     rescue StandardError => e
       message = "#{e.class} #{e.message}\n Backtrace: \n #{e.backtrace}"
-      fail ApiError.new(error_class: e.class, message: e.message)
+      raise ApiError.new(error_class: e.class, message: e.message)
     end
 
     private
 
     def default_headers
-      { "Content-Type" => "application/json" }
+      headers = { 'Content-Type' => 'application/json' }
+      headers['Authorization'] = "Bearer #{SolanaRpcRuby.bearer_token}" if SolanaRpcRuby.bearer_token
+      headers
     end
   end
 end

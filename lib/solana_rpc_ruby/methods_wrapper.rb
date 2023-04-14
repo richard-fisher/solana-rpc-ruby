@@ -23,6 +23,8 @@ module SolanaRpcRuby
     # @return [Integer]
     attr_accessor :id
 
+    attr_accessor :bearer_token
+
     # Initialize object with cluster address where requests will be sent.
     #
     # @param api_client [ApiClient]
@@ -31,12 +33,14 @@ module SolanaRpcRuby
     def initialize(
       api_client: ApiClient,
       cluster: SolanaRpcRuby.cluster,
-      id: rand(1...99_999)
+      id: rand(1...99_999),
+      bearer_token: SolanaRpcRuby.bearer_token
     )
 
       @api_client = api_client.new(cluster)
       @cluster = cluster
       @id = id
+      @bearer_token = bearer_token
     end
 
     # @see https://docs.solana.com/developing/clients/jsonrpc-api#getaccountinfo
@@ -53,7 +57,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_account_info(account_pubkey, encoding: '', data_slice: {}, commitment: '')
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -80,7 +84,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_balance(account_pubkey, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
 
@@ -110,7 +114,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_block(slot, encoding: '', transaction_details: '', rewards: true, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
 
@@ -163,14 +167,14 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_block_production(identity: nil, range: {}, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
       range_hash = {}
 
-      range_hash['firstSlot'] = range[:first_slot] unless !range.key?(:first_slot)
-      range_hash['lastSlot'] = range[:last_slot] unless !range.key?(:last_slot)
+      range_hash['firstSlot'] = range[:first_slot] if range.key?(:first_slot)
+      range_hash['lastSlot'] = range[:last_slot] if range.key?(:last_slot)
 
       params_hash['identity'] = identity unless blank?(identity)
       params_hash['range'] = range_hash unless range_hash.empty?
@@ -192,7 +196,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_block_commitment(block)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
 
@@ -214,7 +218,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_blocks(start_slot, end_slot: nil, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -242,7 +246,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_blocks_with_limit(start_slot, limit, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -267,7 +271,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_block_time(block)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
 
@@ -285,7 +289,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_cluster_nodes
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -301,7 +305,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_epoch_info(commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -322,7 +326,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_epoch_schedule
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -340,7 +344,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_fee_for_message(message, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -361,7 +365,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_first_available_block
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -375,7 +379,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_genesis_hash
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -389,7 +393,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_health
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -406,7 +410,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_highest_snapshot_slot
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -420,7 +424,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_identity
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -436,7 +440,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_inflation_governor(commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -457,7 +461,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_inflation_rate
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -475,7 +479,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_inflation_reward(addresses, commitment: nil, epoch: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -502,7 +506,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_largest_accounts(commitment: nil, filter: '')
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -527,7 +531,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_latest_blockhash(commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -552,7 +556,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_leader_schedule(epoch: nil, commitment: nil, identity: '')
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -575,7 +579,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_max_retransmit_slot
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -588,7 +592,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_max_shred_insert_slot
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -604,11 +608,11 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_minimum_balance_for_rent_exemption(
-          account_data_length,
-          commitment: nil
-        )
+      account_data_length,
+      commitment: nil
+    )
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -636,13 +640,13 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_multiple_accounts(
-          pubkeys,
-          commitment: nil,
-          encoding: '',
-          data_slice: {}
-        )
+      pubkeys,
+      commitment: nil,
+      encoding: '',
+      data_slice: {}
+    )
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -679,15 +683,15 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_program_accounts(
-          pubkey,
-          commitment: nil,
-          encoding: '',
-          data_slice: {},
-          filters: [],
-          with_context: false
-        )
+      pubkey,
+      commitment: nil,
+      encoding: '',
+      data_slice: {},
+      filters: [],
+      with_context: false
+    )
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -716,7 +720,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_recent_performance_samples(limit: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
 
@@ -742,12 +746,12 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_signatures_for_address(
-          account_address,
-          limit: nil,
-          before: '',
-          until_: '',
-          commitment: nil
-        )
+      account_address,
+      limit: nil,
+      before: '',
+      until_: '',
+      commitment: nil
+    )
       http_method = :post
       method = create_method_name(__method__)
 
@@ -779,9 +783,9 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_signature_statuses(
-          transaction_signatures,
-          search_transaction_history: false
-        )
+      transaction_signatures,
+      search_transaction_history: false
+    )
       http_method = :post
       method = create_method_name(__method__)
 
@@ -807,7 +811,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_slot(commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -830,7 +834,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_slot_leader(commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -854,7 +858,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_slot_leaders(start_slot, limit)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = [start_slot, limit]
 
@@ -874,7 +878,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_stake_activation(pubkey, commitment: nil, epoch: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -900,7 +904,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_supply(commitment: nil, exclude_non_circulating_accounts_list: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -926,7 +930,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_token_account_balance(token_account_pubkey, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -958,18 +962,18 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_token_accounts_by_delegate(
-          token_account_pubkey,
-          mint: '',
-          program_id: '',
-          commitment: nil,
-          encoding: '',
-          data_slice: {}
-        )
+      token_account_pubkey,
+      mint: '',
+      program_id: '',
+      commitment: nil,
+      encoding: '',
+      data_slice: {}
+    )
 
       raise ArgumentError, 'You should pass mint or program_id, not both.' if !blank?(mint) && !blank?(program_id)
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1008,18 +1012,18 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_token_accounts_by_owner(
-          token_account_pubkey,
-          mint: '',
-          program_id: '',
-          commitment: nil,
-          encoding: '',
-          data_slice: {}
-        )
+      token_account_pubkey,
+      mint: '',
+      program_id: '',
+      commitment: nil,
+      encoding: '',
+      data_slice: {}
+    )
 
       raise ArgumentError, 'You should pass mint or program_id, not both.' if !mint.empty? && !program_id.empty?
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1051,12 +1055,12 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_token_largest_accounts(
-          token_mint_pubkey,
-          commitment: nil
-        )
+      token_mint_pubkey,
+      commitment: nil
+    )
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1085,7 +1089,7 @@ module SolanaRpcRuby
     )
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1111,7 +1115,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_transaction(transaction_signature, encoding: '', commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1137,7 +1141,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_transaction_count(commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1158,7 +1162,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_version
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -1182,7 +1186,7 @@ module SolanaRpcRuby
       delinquent_slot_distance: nil
     )
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1210,7 +1214,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def is_blockhash_valid(blockhash, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1233,7 +1237,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def minimum_ledger_slot
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -1251,7 +1255,7 @@ module SolanaRpcRuby
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def request_airdrop(pubkey, lamports, commitment: nil)
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1278,14 +1282,14 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def send_transaction(
-          transaction_signature,
-          skip_pre_flight: false,
-          pre_flight_commitment: nil,
-          encoding: '',
-          max_retries: nil
-        )
+      transaction_signature,
+      skip_pre_flight: false,
+      pre_flight_commitment: nil,
+      encoding: '',
+      max_retries: nil
+    )
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1303,7 +1307,6 @@ module SolanaRpcRuby
       send_request(body, http_method)
     end
 
-
     # @see https://docs.solana.com/developing/clients/jsonrpc-api#simulatetransaction
     #
     # Simulate sending a transaction
@@ -1319,20 +1322,20 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def simulate_transaction(
-          transaction_signature,
-          accounts_addresses,
-          sig_verify: false,
-          commitment: nil,
-          encoding: '',
-          replace_recent_blockhash: false,
-          accounts_encoding: ''
-        )
+      transaction_signature,
+      accounts_addresses,
+      sig_verify: false,
+      commitment: nil,
+      encoding: '',
+      replace_recent_blockhash: false,
+      accounts_encoding: ''
+    )
 
       raise ArgumentError, 'Params sig_verify and replace_recent_blockhash cannot both be set to true.' \
         if sig_verify && replace_recent_blockhash
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1353,7 +1356,6 @@ module SolanaRpcRuby
       send_request(body, http_method)
     end
 
-
     ######## DEPRECATED METHODS #########
 
     # @deprecated Please use getBlocks instead This method is expected to be removed in solana-core v1.8
@@ -1370,7 +1372,7 @@ module SolanaRpcRuby
       warn 'DEPRECATED: Please use getBlocks instead. This method is expected to be removed in solana-core v1.8'
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
 
@@ -1393,10 +1395,10 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_fee_calculator_for_blockhash(query_blockhash, commitment: nil)
-      warn "DEPRECATED: Please use isBlockhashValid or getFeeForMessage instead. This method is expected to be removed in solana-core v2.0"
+      warn 'DEPRECATED: Please use isBlockhashValid or getFeeForMessage instead. This method is expected to be removed in solana-core v2.0'
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1419,10 +1421,10 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_fee_rate_governor
-      warn "DEPRECATED Please check solana docs for substitution."
+      warn 'DEPRECATED Please check solana docs for substitution.'
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -1440,10 +1442,10 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_fees(commitment: nil)
-      warn "DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0"
+      warn 'DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0'
 
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1467,9 +1469,9 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_recent_blockhash(commitment: nil)
-      warn "DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0"
+      warn 'DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0'
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       params = []
       params_hash = {}
@@ -1491,9 +1493,9 @@ module SolanaRpcRuby
     #
     # @return [Response, ApiError] Response when success, ApiError on failure.
     def get_snapshot_slot
-      warn "DEPRECATED: Please use getHighestSnapshotSlot instead This method is expected to be removed in solana-core v2.0"
+      warn 'DEPRECATED: Please use getHighestSnapshotSlot instead This method is expected to be removed in solana-core v2.0'
       http_method = :post
-      method =  create_method_name(__method__)
+      method = create_method_name(__method__)
 
       body = create_json_body(method)
 
@@ -1505,15 +1507,15 @@ module SolanaRpcRuby
     def send_request(body, http_method)
       api_response = api_client.call_api(
         body: body,
-        http_method: http_method,
+        http_method: http_method
       )
 
       if api_response.body
         response = Response.new(api_response)
 
-        fail ApiError.new(message: response.parsed_response) if response.parsed_response.key?('error')
+        raise ApiError.new(message: response.parsed_response) if response.parsed_response.key?('error')
 
-        return response
+        response
       end
     end
   end
